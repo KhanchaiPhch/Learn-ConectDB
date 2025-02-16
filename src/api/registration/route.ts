@@ -2,9 +2,9 @@
 import express, { Request, Response } from "express";
 import { user } from "../../mongDB/schema";
 
-export const tempAccount = express();
+export const tempAccount = express.Router();
 
-tempAccount.post("/create", async (req: Request, res: Response) => {
+tempAccount.post("/createUser", async (req: Request, res: Response) => {
 
     console.log('asdfsdf')
 
@@ -17,7 +17,7 @@ tempAccount.post("/create", async (req: Request, res: Response) => {
             "idCard": idCard,
             "email": email
         })
-
+        
         res.status(200).send({
             status: 200,
             msg: "success",
