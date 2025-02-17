@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import dayjs from 'dayjs'
-import isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
-import 'dayjs/locale/zh-cn' // import locale
-import { user } from "../../mongDB/schema";
+ import 'dayjs/locale/zh-cn' // import locale
+import { user } from "../../mongDB/userSchema";
+import { auth } from "../../mongDB/authSchema"
 
-export const tempAccount = express.Router();
+export const tempAccount = express();
 
 tempAccount.post("/createUser", async (req: Request, res: Response) => {
 
@@ -31,9 +31,17 @@ tempAccount.post("/createUser", async (req: Request, res: Response) => {
         const password = await user.findOne({
             idCard: idCard
         })
+
         const time = dayjs()
-        let chnumber = time.add(30 , 'minute')
-        console.log(chnumber)
+
+        let timeAdd = time.add(30, 'minute')
+        // console.log(timeAdd)
+
+        await auth.insertOne({
+            username: `TA${myDate.format('YYYYMMDD')}${conunt}`,
+            password: password?.idCard?.slice(7),
+            exp: `${myDate.format(`YYYY-MM-DD`)} ${timeAdd.format(`HH:mm:ss`)}`
+        })
 
         res.status(200).send({
             status: 200,
@@ -41,7 +49,7 @@ tempAccount.post("/createUser", async (req: Request, res: Response) => {
             data: {
                 username: `TA${myDate.format('YYYYMMDD')}${conunt}`,
                 password: password?.idCard?.slice(7),
-                exp: `${myDate.format(`YYYY-MM-DD`)} ${chnumber.format(`HH:mm:ss`)}`
+                exp: `${myDate.format(`YYYY-MM-DD`)} ${timeAdd.format(`HH:mm:ss`)}`
             }
         })
     } catch (error) {
