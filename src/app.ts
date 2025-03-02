@@ -6,7 +6,7 @@ import helmet from "helmet";
 import mongoose from "mongoose";
 
 
-import { tempAccount } from "./api/registration/route";
+import { registration } from "./api/registration/route";
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 
-app.use("/tempAccount", tempAccount)
+app.use("/registration", registration)
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
